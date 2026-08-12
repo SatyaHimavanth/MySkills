@@ -90,10 +90,32 @@ route → unit of work → service(s) → repositories → commit/rollback
 Do not mix commit ownership randomly across repository methods.
 
 ## `expire_on_commit`
-With async APIs, setting `expire_on_commit=False` in `async_sessionmaker` prevents SQLAlchemy from expiring attributes after commit, avoiding `MissingGreenlet` or implicit async DB calls during Pydantic response serialization.
+With async APIs, setting `expire_on_commit=False` in `async_sessionmaker` prevents SQLAlchemy from expiring *already-loaded* attributes after commit, avoiding `MissingGreenlet` or implicit async DB calls during Pydantic response serialization for ordinary columns.
+
+**This does not cover server-generated columns on UPDATE.** `expire_on_commit=False` only stops the *whole object* from being expired; it does not stop SQLAlchemy from marking a specific attribute as "needs refresh" when that attribute has a `server_default` or `onupdate` value the ORM never received back from the database. If a mapped column uses `server_default=func.now()` or `onupdate=func.now()`, accessing that attribute after an INSERT/UPDATE will still trigger an implicit lazy load — which raises `MissingGreenlet` under the async driver, `expire_on_commit` setting notwithstanding.
+
+Set `eager_defaults=True` on any mapped class that has `server_default`/`onupdate` columns you read back in the same request (e.g. returning the updated row in an API response). This makes SQLAlchemy use `RETURNING` to populate those columns immediately as part of the INSERT/UPDATE, instead of deferring and later lazy-loading them:
+
+```python
+class Task(Base):
+    __tablename__ = "tasks"
+    __mapper_args__ = {"eager_defaults": True}  # required: this table has onupdate=func.now()
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+```
+
+Symptom if this is skipped: the first `UPDATE` (or, for some columns, `INSERT`) that touches the affected row and is then serialized into a response raises `sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here`. This will not appear in local manual testing if you never read the column back immediately after a write — it surfaces as a 500 the first time a client does `PATCH` then reads the response body, so cover it explicitly in API tests, not just unit tests.
 
 ## Testing
 Use isolated sessions/transactions or dedicated test databases (e.g. test containers or rollback fixtures). Do not share a mutable global session between tests.
+
+## Forbidden
+
+- `server_default`/`onupdate` columns read back in the same request without `eager_defaults=True` on that mapped class
+- assuming `expire_on_commit=False` alone is sufficient to prevent `MissingGreenlet` on every column
 
 ## Source basis
 SQLAlchemy 2.0 Async documentation: async session lifecycle, `DeclarativeBase`, `Mapped`, `mapped_column`, `async_sessionmaker`, and single task concurrency rules.

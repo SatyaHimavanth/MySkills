@@ -52,6 +52,25 @@ app = FastAPI(lifespan=lifespan)
 
 Use typed infrastructure containers or dependency wrappers when the project benefits from stronger typing.
 
+## Accessing lifespan resources from dependencies
+
+Resources stored on `app.state` during startup are retrieved through a small dependency function that reads `request.app.state`. This function **must** type-annotate its `request` parameter as FastAPI's `Request`:
+
+```python
+from fastapi import Depends, Request
+from redis.asyncio import Redis
+
+async def get_redis(request: Request) -> Redis:
+    return request.app.state.redis
+
+def get_cache(redis: Redis = Depends(get_redis)) -> Cache:
+    return Cache(redis)
+```
+
+**If `request` is left untyped (`async def get_redis(request):`), FastAPI cannot recognize it as the injectable `Request` object and silently treats it as a required query parameter named `request` on every route that depends on it — directly or transitively.** This does not raise an error at startup or in the OpenAPI schema's absence; it appears as every affected route (including unrelated ones like login, if login is rate-limited through the same Redis dependency) returning `422 Unprocessable Entity` demanding a `request` query parameter, which is easy to misdiagnose as an auth or validation bug rather than a DI typing bug. Always check `/openapi.json` for an unexpected `request` query parameter on a route if you see this symptom.
+
+This applies to any plain (non-route) dependency function that needs `Request`, `BackgroundTasks`, or other FastAPI-injectable types — not just resource accessors. The special-parameter recognition is based on FastAPI reading the type annotation; an unannotated or incorrectly annotated parameter degrades silently to "read this from the request" (query/body) instead of failing loudly.
+
 ## Initialization Order
 
 ```text
@@ -83,6 +102,7 @@ Test startup and cleanup. Use `TestClient` as a context manager (`with TestClien
 - hidden startup failures
 - closing shared resources from handlers
 - putting request state into lifespan resources
+- untyped `request` parameters in dependency functions that need `Request`, `BackgroundTasks`, or similar FastAPI-injectable types (silently becomes a query parameter instead of failing at startup)
 
 ## Sources
 

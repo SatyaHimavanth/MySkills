@@ -15,6 +15,21 @@ Make schema evolution reviewable, reproducible, and safe during rolling deployme
 - Separate large data backfills from normal request handling.
 - Keep migration execution as a controlled deployment step rather than every API worker running it automatically.
 
+### Common autogenerate defect: missing imports for custom types
+
+If any mapped column uses a custom `TypeDecorator` (e.g. a portable GUID/UUID type, an encrypted-string type, a JSON-schema-validated type), `alembic revision --autogenerate` references that type in the generated migration's `op.create_table`/`op.add_column` calls but does **not** always add the corresponding `import` line. The generated file will look correct at a glance and fail only when actually run:
+
+```python
+# generated migration references app.models.guid.GUID() but never imports it
+op.create_table(
+    "tasks",
+    sa.Column("id", app.models.guid.GUID(), nullable=False),  # NameError: app is not defined
+    ...
+)
+```
+
+This is silent until `alembic upgrade head` is actually executed — it is invisible in a code diff to anyone not specifically checking every symbol against the file's own imports. Explicitly check generated migrations for any custom type reference and confirm the corresponding import exists, as part of the "manual review" step above, not as a separate optional step.
+
 ## Alembic Async Setup
 
 ```python
