@@ -1,0 +1,20 @@
+[dependency-groups]
+test = [
+  "anyio",
+  "pytest",
+  "pytest-cov",
+]
+
+[tool.pytest.ini_options]
+addopts = ["--strict-markers"]
+markers = [
+  "unit: fast isolated tests",
+  "api: API tests",
+  "integration: tests requiring real dependencies",
+  "database: PostgreSQL/database semantics",
+  "security: security tests",
+  "contract: API contract tests",
+  "concurrency: race/locking/idempotency tests",
+  "e2e: end-to-end workflows",
+  "slow: intentionally expensive tests",
+]
