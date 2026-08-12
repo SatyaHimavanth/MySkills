@@ -17,14 +17,14 @@ A modular collection of production-grade skills and architecture guardrails for 
 To pull all skills in this repository into your AI agent environment:
 
 ```bash
-npx skills add <your-github-username>/<your-repo-name>
+npx skills add SatyaHimavanth/MySkills
 ```
 
 ### 2. Install Only a Specific Skill
 To pull only the `fastapi-production` backend skill:
 
 ```bash
-npx skills add <your-github-username>/<your-repo-name> fastapi-production
+npx skills add SatyaHimavanth/MySkills fastapi-production
 ```
 
 ---
@@ -93,5 +93,5 @@ To add a new skill in the future (e.g. `frontend-production`):
    ```
 3. Commit and push to GitHub. Users can then pull it via:
    ```bash
-   npx skills add <your-github-username>/<your-repo-name> frontend-production
+   npx skills add SatyaHimavanth/MySkills frontend-production
    ```
