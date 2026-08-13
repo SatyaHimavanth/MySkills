@@ -1,0 +1,108 @@
+diff --git a/skills/fastapi-production/SKILL.md b/skills/fastapi-production/SKILL.md
+index 2ef3d5f..32df62d 100644
+--- a/skills/fastapi-production/SKILL.md
++++ b/skills/fastapi-production/SKILL.md
+@@ -107,13 +107,14 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
+ | Idempotency | `async/idempotency.shared.md` |
+ | Storage/uploads/downloads | `storage/files.shared.md`, `storage/downloads.shared.md`, `storage/local_dev.md`, `storage/prod.md` |
+ | Time/date | `time/shared.md`, `time/local_dev.md`, `time/prod.md` |
+-| Testing | `testing/shared.md`, `testing/fixtures.shared.md`, `testing/database.shared.md`, `testing/api.shared.md`, `testing/security.shared.md`, `testing/contract.shared.md`, `testing/concurrency.shared.md`, `testing/e2e.shared.md`, `testing/local_dev.md`, `testing/prod.md` |
++| Testing | `testing/shared.md`, `testing/fixtures.shared.md`, `testing/database.shared.md`, `testing/api.shared.md`, `testing/security.shared.md`, `testing/contract.shared.md`, `testing/concurrency.shared.md`, `testing/e2e.shared.md`, `testing/load.shared.md`, `testing/local_dev.md`, `testing/prod.md` |
+ | Observability | `observability/shared.md`, `observability/local_dev.md`, `observability/prod.md` |
+ | Deployment/topology | `deployment/local_dev.md`, `deployment/prod.md`, `deployment/topology.shared.md`, `deployment/load_balancing.local_dev.md`, `deployment/load_balancing.prod.md` |
+ | CI/CD | `deployment/cicd.shared.md` |
+ | Reliability/degradation | `reliability/shared.md`, `reliability/degradation.shared.md`, `reliability/circuit_breakers.shared.md` |
+ | SLOs/alerting/DR/runbooks | `operations/slo.shared.md`, `operations/alerting.shared.md`, `operations/disaster_recovery.shared.md`, `operations/runbooks.shared.md`, `operations/local_dev.md`, `operations/prod.md` |
+ | Rollback | `deployment/rollback.shared.md` |
++| Feature flags | `deployment/feature_flags.shared.md` |
+ | Checklists | `checklists/project-scoping.md`, `checklists/new-endpoint.md`, `checklists/production-readiness.md`, `checklists/architecture-change.md`, `checklists/project-environment-discovery.md` |
+ 
+ ## Environment rule
+diff --git a/skills/fastapi-production/deployment/feature_flags.shared.md b/skills/fastapi-production/deployment/feature_flags.shared.md
+new file mode 100644
+index 0000000..2d8f497
+--- /dev/null
++++ b/skills/fastapi-production/deployment/feature_flags.shared.md
+@@ -0,0 +1,42 @@
++# Feature Flags — Shared
++
++## Purpose
++`deployment/rollback.shared.md` already champions expand-and-contract for schema changes — decouple the risky step from the deploy. Feature flags are the same idea applied to code paths: ship code disabled, enable independently of deploy, kill instantly without a rollback deploy if it misbehaves.
++
++## Default: config-driven, no new infra
++For most projects, a flag is a boolean in Settings, evaluated in code — no new service:
++
++```python
++class FeatureFlags(BaseModel):
++    new_pricing_engine: bool = False
++
++# usage
++if settings.flags.new_pricing_engine:
++    ...
++```
++Sufficient for on/off per-environment rollout. Insufficient for per-user targeting, percentage rollout, or a non-engineer toggling flags without a deploy — that's the signal to move up, not a reason to build it yourself.
++
++## Scale-up: Unleash
++Self-hosted, open source, real Python SDK, when per-user/percentage targeting or a UI for non-engineers is actually needed. Real ongoing cost, not free to add: expect meaningful integration time per service plus regular maintenance (DB backups, SDK version bumps, its own uptime to monitor) — same "measure before adding infrastructure" reasoning as `async/outbox.shared.md`'s CDC step. Don't add this pre-emptively.
++
++```python
++from UnleashClient import UnleashClient
++
++client = UnleashClient(url=settings.unleash.url, app_name="api")
++client.initialize_client()
++
++if client.is_enabled("new-pricing-engine", fallback_function=lambda ctx: False):
++    ...
++```
++Always provide a fallback — a flag service being unreachable must degrade to a known-safe default, not fail the request.
++
++## Testing
++Every flag needs both states tested (`testing/api.shared.md`), not just the default — a flag flipped in prod with only the off-path ever tested is a live production experiment.
++
++## Lifecycle
++A flag is temporary scaffolding, not permanent config. Remove the flag and the dead code path once a rollout is complete and stable — an accumulating pile of stale flags is its own maintenance/testing-matrix burden.
++
++## Forbidden
++- a flag with no fallback behavior when the flag source is unreachable
++- shipping and forgetting — no owner/removal plan for a temporary rollout flag
++- adding Unleash (or similar) before a config boolean is actually insufficient
+diff --git a/skills/fastapi-production/testing/load.shared.md b/skills/fastapi-production/testing/load.shared.md
+new file mode 100644
+index 0000000..0de3d0b
+--- /dev/null
++++ b/skills/fastapi-production/testing/load.shared.md
+@@ -0,0 +1,34 @@
++# Load & Performance Testing — Shared
++
++## Purpose
++Correctness tests (`testing/*.shared.md`) prove the app behaves right for one request. They don't prove it survives 500 concurrent ones — a different failure class (connection pool exhaustion, N+1 queries only visible under concurrency, rate limiter/cache contention).
++
++## Default: Locust
++Python-native, no new language for a project already on `uv`/pytest — reuses real auth/token logic instead of reimplementing it in another language.
++
++```python
++from locust import HttpUser, task, between
++
++class ApiUser(HttpUser):
++    wait_time = between(1, 3)
++
++    def on_start(self):
++        r = self.client.post("/api/v1/auth/login", json={"email": "loadtest@example.com", "password": "..."})
++        self.token = r.json()["access_token"]
++
++    @task
++    def list_tasks(self):
++        self.client.get("/api/v1/tasks", headers={"Authorization": f"Bearer {self.token}"})
++```
++Run against a production-shaped environment (real Postgres/Redis, per `testing/database.shared.md` — not SQLite/mocks) — start at expected peak concurrent users + ~20-30% headroom, increase until degradation to find the actual ceiling.
++
++## Alternative: k6
++Prefer k6 when the goal is a CI-gated pass/fail threshold on every change (`deployment/cicd.shared.md`) rather than exploratory Python-scripted scenarios — its `thresholds` config fails the build declaratively; Locust needs custom glue for the same result. Both are legitimate; don't run both by default, pick one per project.
++
++## What to watch, not just requests/sec
++DB pool exhaustion (`database/pooling.shared.md`'s budget under real concurrency, not just at rest), p99 latency (not just average — a slow tail hides behind a good mean), and error rate climbing before throughput plateaus (the actual capacity ceiling, not the point requests/sec stops increasing).
++
++## Forbidden
++- load testing against SQLite/mocked DB or Redis — numbers won't transfer to production
++- treating average latency alone as sufficient — a good mean can hide a bad p99
++- running load tests only once, pre-launch, with no regression baseline going forward

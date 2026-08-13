@@ -107,13 +107,14 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Idempotency | `async/idempotency.shared.md` |
 | Storage/uploads/downloads | `storage/files.shared.md`, `storage/downloads.shared.md`, `storage/local_dev.md`, `storage/prod.md` |
 | Time/date | `time/shared.md`, `time/local_dev.md`, `time/prod.md` |
-| Testing | `testing/shared.md`, `testing/fixtures.shared.md`, `testing/database.shared.md`, `testing/api.shared.md`, `testing/security.shared.md`, `testing/contract.shared.md`, `testing/concurrency.shared.md`, `testing/e2e.shared.md`, `testing/local_dev.md`, `testing/prod.md` |
+| Testing | `testing/shared.md`, `testing/fixtures.shared.md`, `testing/database.shared.md`, `testing/api.shared.md`, `testing/security.shared.md`, `testing/contract.shared.md`, `testing/concurrency.shared.md`, `testing/e2e.shared.md`, `testing/load.shared.md`, `testing/local_dev.md`, `testing/prod.md` |
 | Observability | `observability/shared.md`, `observability/local_dev.md`, `observability/prod.md` |
 | Deployment/topology | `deployment/local_dev.md`, `deployment/prod.md`, `deployment/topology.shared.md`, `deployment/load_balancing.local_dev.md`, `deployment/load_balancing.prod.md` |
 | CI/CD | `deployment/cicd.shared.md` |
 | Reliability/degradation | `reliability/shared.md`, `reliability/degradation.shared.md`, `reliability/circuit_breakers.shared.md` |
 | SLOs/alerting/DR/runbooks | `operations/slo.shared.md`, `operations/alerting.shared.md`, `operations/disaster_recovery.shared.md`, `operations/runbooks.shared.md`, `operations/local_dev.md`, `operations/prod.md` |
 | Rollback | `deployment/rollback.shared.md` |
+| Feature flags | `deployment/feature_flags.shared.md` |
 | Checklists | `checklists/project-scoping.md`, `checklists/new-endpoint.md`, `checklists/production-readiness.md`, `checklists/architecture-change.md`, `checklists/project-environment-discovery.md` |
 
 ## Environment rule

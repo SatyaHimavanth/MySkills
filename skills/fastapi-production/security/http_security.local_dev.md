@@ -9,7 +9,7 @@ Allow normal frontend development without teaching the application unsafe produc
 - Explicitly allow only the local frontend origins actually used, for example `http://localhost:5173`.
 - Do not use wildcard CORS with credentialed browser sessions.
 - Local HTTP may be acceptable when TLS is not part of the feature being tested.
-- If cookie/security behavior is being tested, use a trustworthy HTTPS local setup: [mkcert](https://github.com/FiloSottile/mkcert) generates a local CA and locally-trusted certs (`mkcert -install && mkcert localhost 127.0.0.1`) — no browser warnings, closer to prod TLS behavior than a self-signed cert. Never commit the generated `rootCA-key.pem`; it can intercept any TLS traffic trusted by that machine.
+- If cookie/security behavior is being tested, use a trustworthy HTTPS local setup. If a local Caddy reverse proxy is already in the loop, prefer its own automatic local CA over a separate tool — see `networking/local_dev.md`. Otherwise (e.g. testing directly against `uvicorn --ssl-keyfile/--ssl-certfile`, no proxy involved), use [mkcert](https://github.com/FiloSottile/mkcert) (`mkcert -install && mkcert localhost 127.0.0.1`) — no browser warnings, closer to prod TLS behavior than a self-signed cert. Never commit the generated `rootCA-key.pem`; it can intercept any TLS traffic trusted by that machine.
 - Document whether a reverse proxy is present.
 - Do not trust arbitrary X-Forwarded-* headers from direct clients.
 
