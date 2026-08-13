@@ -20,7 +20,7 @@ OpenTelemetry SDK
 local Collector/backend
 ```
 
-Use this when testing OTLP export, propagation, sampling, or collector configuration.
+Use this when testing OTLP export, propagation, sampling, or collector configuration. [OpenObserve](https://github.com/openobserve/openobserve) is a good local backend for this: single ~40MB binary or Docker image, native OTLP ingestion for logs/metrics/traces on one port, no separate stack to run. Point the OTel SDK's OTLP exporter at it; no app code changes vs. any other OTLP backend.
 
 ## Tests
 Verify:

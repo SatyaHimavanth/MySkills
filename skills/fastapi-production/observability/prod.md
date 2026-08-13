@@ -35,7 +35,7 @@ rate-limit rejections
 
 ## Tracing
 
-Use OpenTelemetry traces when distributed diagnosis is valuable. Configure exporters and sampling through typed settings, not hard-coded endpoints.
+Use OpenTelemetry traces when distributed diagnosis is valuable. Configure exporters and sampling through typed settings, not hard-coded endpoints. [OpenObserve](https://github.com/openobserve/openobserve) is one viable self-hosted OTLP-native destination for logs+metrics+traces in one system (AGPL-3.0 — review before embedding/redistributing; not a concern for internal-only use). Not exclusive: any OTLP-compatible backend works without app code changes since the SDK only talks to a configured endpoint.
 
 ## Metrics
 

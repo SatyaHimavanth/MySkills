@@ -65,7 +65,7 @@ Map provider failures to stable application exceptions, for example timeout/503 
 
 User-controlled URLs require SSRF validation before the HTTP client is called. HTTPX is not itself an SSRF defense. Do not blindly follow redirects for security-sensitive URLs; validate redirect targets too.
 
-Keep credentials in Settings and prefer authorization headers over query-string secrets. Forward only approved correlation/trace headers, not all incoming headers.
+Keep credentials in Settings and prefer authorization headers over query-string secrets. Do not manually copy incoming headers onto outgoing requests as a way to "forward" tracing — instrument the client with `opentelemetry-instrumentation-httpx` (`HTTPXClientInstrumentor().instrument()`) instead, which injects `traceparent` into every outbound call automatically. Manual header copying also leaks unrelated incoming headers downstream.
 
 ## Testing
 

@@ -73,7 +73,7 @@ Do not assume these are atomic:
 DB commit + queue publish
 ```
 
-When both must be reliable, prefer an outbox pattern:
+When both must be reliable, prefer an outbox pattern — see `async/outbox.shared.md` for the concrete implementation and the polling-vs-CDC decision:
 
 ```text
 DB transaction
@@ -82,6 +82,8 @@ DB transaction
        ↓ commit
 outbox publisher → queue → worker
 ```
+
+`opentelemetry-instrumentation-httpx` auto-propagates `traceparent` on HTTP calls (see `http/clients.shared.md`) but not into queue/job payloads — inject it into the outbox event or job payload manually if trace continuity into workers matters.
 
 ## Retry Policy
 

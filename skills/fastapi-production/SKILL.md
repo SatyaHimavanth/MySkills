@@ -25,6 +25,8 @@ This skill is an implementation and architecture guardrail for coding assistants
 ## Required agent workflow
 
 ```text
+SCOPE THE PROJECT (if greenfield or ambiguous — see checklists/project-scoping.md)
+  ↓
 DISCOVER ENVIRONMENT
   ↓
 INSPECT EXISTING PROJECT
@@ -82,6 +84,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | OpenAPI/docs | `api/openapi.shared.md`, `api/openapi.local_dev.md`, `api/openapi.prod.md` |
 | Errors | `errors/shared.md`, `errors/local_dev.md`, `errors/prod.md` |
 | PostgreSQL/SQLAlchemy | `database/shared.md`, `database/sessions.shared.md`, `database/acid.shared.md`, `database/transactions.shared.md`, `database/concurrency.shared.md`, `database/query_performance.shared.md`, `database/postgresql.shared.md`, `database/multi_region.shared.md` |
+| Multi-tenancy | `database/multi_tenancy.shared.md` |
 | Migrations | `database/migrations.shared.md`, `database/migrations.local_dev.md`, `database/migrations.prod.md` |
 | Pooling/performance | `database/pooling.shared.md`, `database/performance.local_dev.md`, `database/performance.prod.md` |
 | SQLite | `database/sqlite.local_dev.md` |
@@ -93,21 +96,25 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | CSRF/cookies | `security/csrf.shared.md`, `security/csrf.local_dev.md`, `security/csrf.prod.md` |
 | CORS / security headers / proxy trust | `security/cors.shared.md`, `security/cors.local_dev.md`, `security/cors.prod.md`, `security/security_headers.shared.md`, `security/security_headers.local_dev.md`, `security/security_headers.prod.md`, `security/http_security.shared.md`, `security/http_security.local_dev.md`, `security/http_security.prod.md`, `networking/routing.shared.md`, `networking/local_dev.md`, `networking/prod.md` |
 | Secrets | `security/secrets.shared.md` |
+| Audit logging | `security/audit_logging.shared.md` |
+| PII protection at rest | `security/pii_protection.shared.md` |
 | Middleware/request lifecycle | `middleware/shared.md`, `middleware/local_dev.md`, `middleware/prod.md`, `reliability/lifespan.shared.md`, `reliability/lifespan.local_dev.md`, `reliability/lifespan.prod.md` |
 | Outbound HTTP | `http/clients.shared.md`, `http/clients.local_dev.md`, `http/clients.prod.md`, `http_client/shared.md` |
 | Cache / Redis / Infrastructure | `cache/shared.md`, `cache/local_dev.md`, `cache/prod.md`, `infrastructure/containers.local_dev.md`, `infrastructure/containers.prod.md`, `infrastructure/fallbacks.local_dev.md` |
 | Streaming/WebSockets | `streaming/shared.md` |
 | Background jobs | `async/jobs.shared.md`, `async/local_dev.md`, `async/prod.md` |
+| Transactional outbox / dual-write | `async/outbox.shared.md` |
 | Idempotency | `async/idempotency.shared.md` |
 | Storage/uploads/downloads | `storage/files.shared.md`, `storage/downloads.shared.md`, `storage/local_dev.md`, `storage/prod.md` |
 | Time/date | `time/shared.md`, `time/local_dev.md`, `time/prod.md` |
 | Testing | `testing/shared.md`, `testing/fixtures.shared.md`, `testing/database.shared.md`, `testing/api.shared.md`, `testing/security.shared.md`, `testing/contract.shared.md`, `testing/concurrency.shared.md`, `testing/e2e.shared.md`, `testing/local_dev.md`, `testing/prod.md` |
 | Observability | `observability/shared.md`, `observability/local_dev.md`, `observability/prod.md` |
 | Deployment/topology | `deployment/local_dev.md`, `deployment/prod.md`, `deployment/topology.shared.md`, `deployment/load_balancing.local_dev.md`, `deployment/load_balancing.prod.md` |
+| CI/CD | `deployment/cicd.shared.md` |
 | Reliability/degradation | `reliability/shared.md`, `reliability/degradation.shared.md`, `reliability/circuit_breakers.shared.md` |
 | SLOs/alerting/DR/runbooks | `operations/slo.shared.md`, `operations/alerting.shared.md`, `operations/disaster_recovery.shared.md`, `operations/runbooks.shared.md`, `operations/local_dev.md`, `operations/prod.md` |
 | Rollback | `deployment/rollback.shared.md` |
-| Checklists | `checklists/new-endpoint.md`, `checklists/production-readiness.md`, `checklists/architecture-change.md`, `checklists/project-environment-discovery.md` |
+| Checklists | `checklists/project-scoping.md`, `checklists/new-endpoint.md`, `checklists/production-readiness.md`, `checklists/architecture-change.md`, `checklists/project-environment-discovery.md` |
 
 ## Environment rule
 
