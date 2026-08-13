@@ -30,10 +30,10 @@ Example:
 
 ```python
 engine = create_async_engine(
-    settings.database.url,
-    pool_size=settings.database.pool_size,
-    max_overflow=settings.database.max_overflow,
-    pool_timeout=settings.database.pool_timeout_seconds,
+    str(settings.db.url),  # PostgresDsn is a Pydantic URL object, not a str — SQLAlchemy requires str()
+    pool_size=settings.db.pool_size,
+    max_overflow=settings.db.max_overflow,
+    pool_timeout=settings.db.pool_timeout_seconds,
     pool_pre_ping=True,
 )
 ```

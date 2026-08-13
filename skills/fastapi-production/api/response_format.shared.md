@@ -4,6 +4,8 @@
 
 Keep API responses predictable for clients with a unified success and error envelope.
 
+**This documents the enveloped-success convention.** `api/response_contracts.shared.md` documents the alternative bare-success convention (`response_model=UserResponse` directly, envelope only on errors). Pick one for the whole project — see that file for the reconciliation note. Do not apply both in the same API.
+
 ## Rules
 
 - Use one stable success shape across the entire API.

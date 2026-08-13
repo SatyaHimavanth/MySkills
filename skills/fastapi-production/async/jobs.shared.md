@@ -56,7 +56,8 @@ queued/running → cancel_requested → cancelled
 Business code should depend on an interface, not direct Redis/RabbitMQ SDK calls:
 
 ```python
-from typing import Protocol, UUID
+from typing import Protocol
+from uuid import UUID
 
 class JobQueue(Protocol):
     async def enqueue(self, job_id: UUID, payload: dict) -> None: ...

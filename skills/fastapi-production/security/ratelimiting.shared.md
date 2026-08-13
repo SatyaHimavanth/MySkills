@@ -49,7 +49,7 @@ class RedisRateLimiter:
 ## Sensitive Business Flow Limits
 
 Rate limiting should be combined with business-specific controls for flows such as:
-- `/api/v1/auth/login` (e.g. 5 attempts / minute per IP / username)
+- `/api/v1/auth/login` — two **separate** buckets, not one combined key: per-IP (e.g. 20/min, catches credential stuffing across many accounts) and per-username (e.g. 5/min, catches brute force against one account). A single `ip+username` key lets one IP hit the threshold against unlimited usernames before either limit fires.
 - `/api/v1/auth/password-reset` (e.g. 3 attempts / hour per email)
 - `/api/v1/payments/charge` (e.g. 10 operations / minute per user)
 - `/api/v1/ai/generate` (e.g. 20 calls / minute per user)

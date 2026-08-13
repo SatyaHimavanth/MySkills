@@ -31,6 +31,7 @@ Starlette's `BaseHTTPMiddleware` is convenient but has known architectural cavea
 ```python
 from starlette.types import ASGIApp, Receive, Scope, Send
 import contextvars
+import uuid
 
 request_id_ctx: contextvars.ContextVar[str] = contextvars.ContextVar("request_id", default="")
 
@@ -43,8 +44,9 @@ class RequestIDMiddleware:
             await self.app(scope, receive, send)
             return
 
-        # Extract or generate request ID
-        request_id = "req_123"  # or uuid4
+        # Extract the incoming request ID from an upstream proxy if present, else generate one.
+        headers = dict(scope.get("headers", []))
+        request_id = headers.get(b"x-request-id", b"").decode() or str(uuid.uuid4())
         token = request_id_ctx.set(request_id)
         
         try:

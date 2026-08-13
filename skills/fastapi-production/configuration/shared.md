@@ -13,6 +13,17 @@ Centralize application configuration into a single typed boundary using `pydanti
 - Never scatter `os.getenv()` across application logic or route handlers.
 - Required production settings (e.g. database URL, secret keys) must fail at startup if missing, rather than falling back to weak defaults.
 
+## Consuming `PostgresDsn`/`RedisDsn` outside Pydantic
+
+`PostgresDsn` (and `RedisDsn`) are Pydantic `MultiHostUrl`/`Url` objects, not `str` subclasses. Passing one directly to `sqlalchemy.create_async_engine()` or `redis.asyncio.from_url()` raises a `TypeError`/`ValidationError` at startup, because those libraries expect a plain string (or their own `URL` type) and don't know how to interpret a Pydantic URL object. Always convert explicitly at the point of use:
+
+```python
+engine = create_async_engine(str(settings.db.url), pool_size=settings.db.pool_size)
+redis_client = redis.asyncio.from_url(str(settings.redis.url))
+```
+
+This is easy to miss because the failure only appears when the engine/client is actually constructed, not when `Settings()` is instantiated and validated — the settings layer itself will report success even though the value isn't usable yet.
+
 ## Recommended Pattern
 
 ```python

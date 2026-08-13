@@ -12,6 +12,7 @@ Define HTTP response-header policy appropriate to the application's browser and 
 - Use `X-Frame-Options: DENY` (or `SAMEORIGIN`) to prevent framing and clickjacking attacks.
 - Use `Referrer-Policy: strict-origin-when-cross-origin` to restrict sensitive URL leakage in HTTP referrers.
 - Apply `Permissions-Policy` to disable unused browser features (geolocation, camera, microphone).
+- Set `Content-Security-Policy` for any endpoint serving HTML — this is the primary XSS mitigation the other headers don't cover. Start with `default-src 'self'` and tighten per-app; a missing CSP leaves the file's stated XSS goal unaddressed.
 
 ## Production Security Headers Middleware Pattern
 
