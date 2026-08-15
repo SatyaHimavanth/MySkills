@@ -8,7 +8,7 @@ Regenerate the client against a real running instance of the backend (or its com
   api-client-drift:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5  # check the current major version before copying this verbatim — action versions go stale fast, and this one has had active security-relevant changes across its supported majors
       - run: npm ci
       - run: npm run gen:api  # against a running backend service container, or a committed openapi.json artifact
       - run: git diff --exit-code src/api/  # fails the build if generation produced any diff

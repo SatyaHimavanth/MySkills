@@ -42,7 +42,7 @@ jobs:
       redis:
         image: redis:7
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5  # check the current major version before copying this verbatim
       - run: uv sync --frozen
       - run: uv run alembic upgrade head
       - run: uv run pytest --cov=app
