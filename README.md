@@ -7,7 +7,8 @@ A modular collection of production-grade skills and architecture guardrails for 
 | Skill Name | Path | Description |
 |:---|:---|:---|
 | `fastapi-production` | `skills/fastapi-production` | Architecture guardrails for building production-grade FastAPI backends with PostgreSQL, Pydantic v2, SQLAlchemy 2.0, Argon2id, and multi-region deployment. |
-| *(Future Skills)* | `skills/<skill-name>` | Frontend, Design System, or AI Agent skills will be added here. |
+| `frontend-api-client` | `skills/frontend-api-client` | Generates a typed TypeScript client + Zod runtime validators from a backend's OpenAPI schema (verified against FastAPI) instead of hand-written request/response types, so backend contract drift becomes a build error. |
+| *(Future Skills)* | `skills/<skill-name>` | Design System or AI Agent skills will be added here. |
 
 ---
 

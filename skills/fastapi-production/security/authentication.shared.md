@@ -76,6 +76,17 @@ Authentication mechanisms should be selected from the application's client and i
 
 Do not introduce OAuth2 password login merely because FastAPI documents an example; use it only when the application actually owns user credentials and the OAuth2 password grant is appropriate for the architecture.
 
+## Revoking all sessions for a user
+
+A per-request `is_active` check (see the snippet above) stops a *disabled* account but does not, by itself, invalidate refresh tokens already issued to a *compromised but still-active* account — the account-takeover case, where the fix is "kill every existing session right now," not "disable the account." A boolean flag can't express that: it has no way to distinguish tokens issued before a takeover from tokens issued after the user re-authenticates with a new password.
+
+Add a `token_version` (or `security_stamp`) column on the user record, embed its current value as a JWT claim at issue time, and compare on every access/refresh check:
+```python
+if payload.get("token_version") != user.token_version:
+    raise InvalidCredentialsError()
+```
+Incrementing `token_version` (on password change, detected takeover, or explicit "log out everywhere") invalidates every outstanding token for that user in one write, without touching any other user's session and without needing a token blocklist.
+
 ## Forbidden
 
 - issuing refresh or access tokens without verifying `user.is_active` against the database

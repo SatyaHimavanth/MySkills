@@ -65,6 +65,7 @@ Group correlated dependency failures.
 - queue depth/age
 - dependency failure rate
 - memory/CPU saturation
+- per-endpoint request rate deviating sharply from its own recent baseline (not an absolute count — a login endpoint jumping 50x its normal rate is the leading indicator for `operations/runbooks.shared.md`'s credential-stuffing runbook, and fires before CPU saturation does, which is a lagging signal by the time it pages)
 
 ## Alert labels
 

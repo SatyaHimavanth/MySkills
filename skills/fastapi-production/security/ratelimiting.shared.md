@@ -56,6 +56,29 @@ Rate limiting should be combined with business-specific controls for flows such 
 
 OWASP API6 treats unrestricted access to sensitive business flows as a distinct risk; a generic rate limiter alone may not preserve business constraints without tenant or action-specific keying.
 
+## Global aggregate limit — distinct from per-key limits
+
+Per-IP and per-username buckets (above) are both keyed limits — each key gets its own budget. A distributed attack spread across hundreds of IPs, each individually staying under the per-IP threshold, sums past your actual capacity while every individual bucket looks fine. This is not a hypothetical: it's the standard shape of a botnet-driven credential-stuffing attack, and keyed limits are structurally blind to it by design, not by oversight.
+
+Add a separate, global (unkeyed) circuit breaker on security-sensitive endpoints — total requests/sec across all keys combined, independent of any per-IP/per-username bucket:
+
+```python
+class GlobalCircuitBreaker:
+    """Unkeyed — one shared counter, not one per IP/user. Last-resort load shedding
+    when aggregate volume exceeds real capacity regardless of how it's distributed."""
+    def __init__(self, redis: Redis, max_per_second: int) -> None:
+        self.redis = redis
+        self.max_per_second = max_per_second
+
+    async def check(self) -> None:
+        key = f"global-breaker:login:{int(time.time())}"
+        count = await self.redis.incr(key)
+        await self.redis.expire(key, 2)
+        if count > self.max_per_second:
+            raise RateLimitExceededError(retry_after=1)
+```
+Set the threshold well above real peak legitimate traffic — this is a safety valve for "the server is about to fall over," not a normal traffic-shaping control; per-key limits remain the primary defense. See `operations/runbooks.shared.md`'s credential-stuffing runbook for the full incident response this pairs with.
+
 ## Forbidden
 
 - process-local in-memory rate limiting as a production solution across multiple worker replicas

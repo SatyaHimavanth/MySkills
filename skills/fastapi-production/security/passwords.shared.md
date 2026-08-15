@@ -47,6 +47,9 @@ Password hashing parameters should be treated as a policy that can evolve. When 
 
 ## Credential-Reset Safety
 
+## The same slowness that stops offline cracking is a CPU-DoS surface online
+Argon2id's cost is deliberate and correct — it makes offline brute-forcing a stolen hash expensive. That same cost means every login request, legitimate or attacker-driven, consumes real CPU before it can be accepted or rejected. A flood of login requests is therefore also a CPU-exhaustion attack, not just a rate problem — see `operations/runbooks.shared.md`'s credential-stuffing runbook and `security/ratelimiting.shared.md`'s global circuit breaker. Never respond to that kind of incident by lowering the hash cost; fix the request volume reaching the hash, not the hash itself.
+
 Password reset workflows should not disclose whether an account exists through response wording, timing, or email behavior. Use dummy verification timing for non-existent accounts. Reset tokens must be cryptographically random, short-lived, scoped to the reset operation, and invalidated after successful use.
 
 ## Forbidden

@@ -324,3 +324,21 @@ Local infrastructure may be smaller, but application semantics should remain com
 - `content_consistency_audit.py` passes.
 - Phase 1 through Phase 7 verification scripts pass.
 - Package only after all gates pass and `unzip -t` succeeds.
+
+## Phase 8 decisions (external audit + new capability additions)
+
+- Server-side `onupdate`/`server_default` columns need `eager_defaults=True` under async SQLAlchemy — `expire_on_commit=False` alone does not prevent `MissingGreenlet` on those specific columns.
+- Custom FastAPI dependency functions needing `Request`/`BackgroundTasks` must type-annotate the parameter — an untyped `request` silently becomes a required query parameter, not a startup error.
+- Login rate limiting needs two separate buckets (per-IP, per-username), never one combined key — a combined key lets one IP exhaust unlimited usernames (credential stuffing) before either limit fires.
+- A global, unkeyed aggregate circuit breaker is required on auth endpoints in addition to per-key limits — distributed attacks across many IPs, each under its own per-key threshold, are invisible to keyed limiting by construction.
+- Account-takeover response requires a `token_version`/security-stamp claim checked on every access and refresh — an `is_active` flag cannot invalidate specific already-issued sessions without disabling the whole account.
+- Row-Level Security provides zero protection if the application's DB role is a superuser or has `BYPASSRLS` — verified directly; this is silent, with no error and no visible misconfiguration.
+- PostgreSQL `current_setting('app.tenant')` (no `missing_ok`) fails loudly on an unset tenant context; the `missing_ok=true` variant fails silently (zero rows) — prefer the loud form so a missing `SET` is never mistaken for a legitimately empty result.
+- Multi-tenant isolation, PII-at-rest (`pgcrypto`), and audit logging (`pgAudit`) are documented as distinct concerns from user-level authorization/secrets — do not conflate them.
+- The transactional outbox pattern requires `FOR UPDATE SKIP LOCKED` the moment more than one relay worker runs, or concurrent workers double-publish the same event.
+- Load testing an auth-adjacent endpoint must use one account per virtual user, not one shared login — a shared login collides with per-username rate limiting and produces false failures indistinguishable from a real capacity problem.
+- WebSocket auth for bearer-JWT APIs (no cookie) uses first-message auth, not a query-string token; the server must send an explicit readiness ack after any async subscribe step, or a client-triggered event immediately after connecting can race the subscription and be silently dropped.
+- A `pubsub.listen()`-only forwarding loop cannot detect a WebSocket disconnect with no new pub/sub traffic — pair it with a concurrent task whose only job is watching for the disconnect, race the two, and clean up in `finally`.
+- CI/CD, an observability backend, multi-tenancy, PII protection, audit logging, the transactional outbox, load testing, feature flags, and TLS provisioning are now covered (`deployment/cicd.shared.md`, `observability/local_dev.md`+`prod.md`, `database/multi_tenancy.shared.md`, `security/pii_protection.shared.md`, `security/audit_logging.shared.md`, `async/outbox.shared.md`, `testing/load.shared.md`, `deployment/feature_flags.shared.md`, `networking/prod.md`).
+- A project-scoping gate (`checklists/project-scoping.md`) runs before greenfield implementation — prefers the external `grill-me`/`grilling` plugin if installed, with a minimal fallback question set if not; the interview mechanism itself is deliberately not vendored into this skill.
+- A sibling skill, `frontend-api-client`, generates a typed client + Zod runtime validators from this skill's own OpenAPI schema rather than hand-documenting the response contract — closes the loop on `api/response_format.shared.md` vs `api/response_contracts.shared.md`'s bare-vs-enveloped ambiguity, since the frontend never hardcodes either shape.

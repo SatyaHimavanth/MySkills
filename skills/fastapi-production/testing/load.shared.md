@@ -7,13 +7,23 @@ Correctness tests (`testing/*.shared.md`) prove the app behaves right for one re
 Python-native, no new language for a project already on `uv`/pytest — reuses real auth/token logic instead of reimplementing it in another language.
 
 ```python
+import itertools
 from locust import HttpUser, task, between
+
+user_counter = itertools.count(1)
 
 class ApiUser(HttpUser):
     wait_time = between(1, 3)
 
     def on_start(self):
-        r = self.client.post("/api/v1/auth/login", json={"email": "loadtest@example.com", "password": "..."})
+        # One distinct account per virtual user, not one shared login. Verified: sharing a
+        # single login across all simulated users collides with the per-username rate limit
+        # (security/ratelimiting.shared.md) — 30/35 logins failed with 429 in testing, looking
+        # like a capacity problem when it was actually the rate limiter correctly treating
+        # concurrent logins to one account as credential stuffing. Fixed by seeding N distinct
+        # accounts and giving each virtual user its own: 0/152 failures, real numbers.
+        n = next(user_counter)
+        r = self.client.post("/api/v1/auth/login", json={"email": f"loadtest{n}@example.com", "password": "..."})
         self.token = r.json()["access_token"]
 
     @task
@@ -32,3 +42,4 @@ DB pool exhaustion (`database/pooling.shared.md`'s budget under real concurrency
 - load testing against SQLite/mocked DB or Redis — numbers won't transfer to production
 - treating average latency alone as sufficient — a good mean can hide a bad p99
 - running load tests only once, pre-launch, with no regression baseline going forward
+- one shared login/account across all virtual users on a rate-limited auth endpoint — verified this produces false failures indistinguishable from a real capacity problem

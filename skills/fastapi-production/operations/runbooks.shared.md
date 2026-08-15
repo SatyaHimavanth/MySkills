@@ -86,6 +86,26 @@ Check:
 - queue/job payloads
 - memory fragmentation/container limits
 
+## Credential stuffing / login-flood runbook
+
+Symptoms: high request volume on the login endpoint from many distinct IPs, CPU near 100%, legitimate users unable to log in.
+
+Check:
+- is this distributed across many IPs (evades per-IP limits by design) or concentrated (per-IP/per-username limits from `security/ratelimiting.shared.md` should already be absorbing it — if not, they're misconfigured or bypassed)
+- CPU profile — a login-endpoint CPU spike is almost always the password hash itself (Argon2id is deliberately slow, see `security/passwords.shared.md`'s Forbidden note), not application logic; confirm the rate limiter check actually runs before the hash call, not after
+- whether any WAF/CDN sits in front of the app at all, and whether it has an active rate-based rule or "under attack" mode available
+- whether any attempts are succeeding (leaked-credential correlation) — turns this into an account-takeover incident, not just a DoS one
+
+Mitigate:
+- edge/WAF-level blocking or JS challenge first — this is materially cheaper than absorbing the flood in the app, since the app has already paid connection/TLS cost by the time it sees the request
+- a global aggregate circuit breaker on the login endpoint, independent of the per-IP/per-username buckets — those are structurally blind to fan-out across many distinct IPs summing past capacity while each stays under its own threshold
+- CAPTCHA/proof-of-work challenge after N failures, instead of a hard block, to filter bots without locking out legitimate users
+- do not lower Argon2id's cost parameters to reduce CPU load — that weakens the credential store against offline cracking to solve an online-volume problem; fix the volume problem instead
+
+Do not confuse this with a real capacity problem and respond by just scaling out — horizontal scaling absorbs legitimate load, it does not stop an attacker from sending more, and it's slow/expensive to provision against a CPU-bound hash workload specifically.
+
+Post-incident: correlate targeted usernames against known credential-leak lists; force password resets on any account with a successful login during the window.
+
 ## Post-incident
 
 Record:

@@ -83,7 +83,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Versioning/inventory | `api/versioning.shared.md` |
 | OpenAPI/docs | `api/openapi.shared.md`, `api/openapi.local_dev.md`, `api/openapi.prod.md` |
 | Errors | `errors/shared.md`, `errors/local_dev.md`, `errors/prod.md` |
-| PostgreSQL/SQLAlchemy | `database/shared.md`, `database/sessions.shared.md`, `database/acid.shared.md`, `database/transactions.shared.md`, `database/concurrency.shared.md`, `database/query_performance.shared.md`, `database/postgresql.shared.md`, `database/multi_region.shared.md` |
+| PostgreSQL/SQLAlchemy | `database/shared.md`, `database/local_dev.md`, `database/prod.md`, `database/sessions.shared.md`, `database/acid.shared.md`, `database/transactions.shared.md`, `database/concurrency.shared.md`, `database/query_performance.shared.md`, `database/postgresql.shared.md`, `database/multi_region.shared.md` |
 | Multi-tenancy | `database/multi_tenancy.shared.md` |
 | Migrations | `database/migrations.shared.md`, `database/migrations.local_dev.md`, `database/migrations.prod.md` |
 | Pooling/performance | `database/pooling.shared.md`, `database/performance.local_dev.md`, `database/performance.prod.md` |
@@ -96,6 +96,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | CSRF/cookies | `security/csrf.shared.md`, `security/csrf.local_dev.md`, `security/csrf.prod.md` |
 | CORS / security headers / proxy trust | `security/cors.shared.md`, `security/cors.local_dev.md`, `security/cors.prod.md`, `security/security_headers.shared.md`, `security/security_headers.local_dev.md`, `security/security_headers.prod.md`, `security/http_security.shared.md`, `security/http_security.local_dev.md`, `security/http_security.prod.md`, `networking/routing.shared.md`, `networking/local_dev.md`, `networking/prod.md` |
 | Secrets | `security/secrets.shared.md` |
+| OWASP API Security Top 10 checklist | `security/api_security.shared.md` |
 | Audit logging | `security/audit_logging.shared.md` |
 | PII protection at rest | `security/pii_protection.shared.md` |
 | Middleware/request lifecycle | `middleware/shared.md`, `middleware/local_dev.md`, `middleware/prod.md`, `reliability/lifespan.shared.md`, `reliability/lifespan.local_dev.md`, `reliability/lifespan.prod.md` |

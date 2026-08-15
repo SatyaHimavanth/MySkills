@@ -32,6 +32,10 @@ CREATE POLICY tenant_isolation ON tasks
 
 Set `app.current_tenant` per-connection/transaction from the authenticated request context.
 
+**This only works if the application's DB role is NOT a superuser and does NOT have `BYPASSRLS`.** Verified directly: connecting as `postgres` (superuser, `rolbypassrls = t`) returned every tenant's rows with zero filtering, even with `app.current_tenant` completely unset — the policy silently does nothing for that role, with no error, no warning, and `\d tablename` still showing RLS as enabled. This is the single most important precondition for this section and the easiest to miss, because everything *looks* correctly configured right up until a real cross-tenant leak in production. Create a dedicated non-superuser application role (`CREATE ROLE app_role LOGIN; GRANT ...` — not `BYPASSRLS`) and connect as that role, never as the migration/admin role.
+
+**The unset-tenant-context failure mode is fail-closed either way, but by different mechanisms — prefer the strict one.** Verified both: `current_setting('app.current_tenant')` (no second argument) with the variable unset raises a hard Postgres error (`unrecognized configuration parameter`) — every query fails loudly, impossible to miss in testing. `current_setting('app.current_tenant', true)` (the "safer-looking" missing_ok variant) instead evaluates to `NULL`, and `tenant_id = NULL` is never `TRUE` in SQL, so it also returns zero rows rather than leaking — but silently, indistinguishable from "this tenant legitimately has no data," which is a worse debugging experience for the same safety outcome. Use the strict form (no `missing_ok`) so a forgotten `SET app.current_tenant` in application code fails loudly instead of quietly looking like an empty result set.
+
 ## Tenant context propagation
 Resolve tenant identity once (subdomain, header, or JWT claim) at the request boundary and pass it explicitly through service/repository calls — do not re-derive it deeper in the call stack, and never trust a tenant ID supplied directly in a request body.
 
@@ -46,3 +50,4 @@ Every endpoint needs a cross-tenant test: tenant A creates a resource, tenant B 
 - trusting a client-supplied `tenant_id`
 - tenant-unscoped cache keys, rate-limit keys, or storage paths
 - mixing isolation models within one project without a documented reason
+- connecting as a superuser or `BYPASSRLS` role while relying on RLS for isolation — verified this silently disables the policy entirely, with no error and no visual indication anything is wrong
