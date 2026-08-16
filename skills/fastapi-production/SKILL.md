@@ -26,11 +26,15 @@ This skill is an implementation and architecture guardrail for coding assistants
 15. Add a production seam only where a real future replacement is plausible; do not abstract everything preemptively.
 16. Any escalation from a simple local design to Redis, queues, object storage, service decomposition, or distributed topology must have a concrete requirement.
 17. A local build is successful when production promotion mostly changes configuration, infrastructure wiring, scaling, and operational settings—not business logic or API contracts.
+18. Default the production target to **Tier 1 — small-team production** (see `architecture/scale_tiers.shared.md`): a single region, a handful of replicas, shared Redis/object storage once there is more than one replica. Multi-region/CDN/global topology is Tier 2 and requires a concrete escalation trigger, not an assumption that "production" always means worldwide.
+19. Cloud-provider provisioning (managed database/cache setup, IAM, VPC, autoscaling groups, DNS/CDN configuration) is out of scope for this skill — hand it off to the project's cloud-provider skill once the tier and its infrastructure requirements are known.
 
 ## Required agent workflow
 
 ```text
 SCOPE THE PROJECT (if greenfield or materially ambiguous — see checklists/project-scoping.md)
+  ↓
+IDENTIFY THE SCALE TIER (Tier 1 small-team vs Tier 2 regional/global — see architecture/scale_tiers.shared.md)
   ↓
 ESTABLISH COMPLEXITY BUDGET / BASELINE ARCHITECTURE
   ↓
@@ -83,6 +87,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Capability | Read first |
 |---|---|
 | Project architecture | `architecture/shared.md`, `architecture/complexity.shared.md`, `architecture/local_dev.md`, `architecture/prod.md` |
+| Scale tier (small-team vs regional/global) | `architecture/scale_tiers.shared.md` |
 | Python/uv/dependencies | `python/uv.shared.md`, `python/uv.local_dev.md`, `python/uv.prod.md` |
 | Configuration/settings | `configuration/shared.md` |
 | Endpoints/routes | `api/endpoints.shared.md`, `api/endpoints.local_dev.md`, `api/endpoints.prod.md` |
@@ -109,7 +114,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Audit logging | `security/audit_logging.shared.md` |
 | PII protection at rest | `security/pii_protection.shared.md` |
 | Middleware/request lifecycle | `middleware/shared.md`, `middleware/local_dev.md`, `middleware/prod.md`, `reliability/lifespan.shared.md`, `reliability/lifespan.local_dev.md`, `reliability/lifespan.prod.md` |
-| Outbound HTTP | `http/clients.shared.md`, `http/clients.local_dev.md`, `http/clients.prod.md`, `http_client/shared.md` |
+| Outbound HTTP | `http/clients.shared.md`, `http/clients.local_dev.md`, `http/clients.prod.md` |
 | Cache / Redis / Infrastructure | `cache/shared.md`, `cache/local_dev.md`, `cache/prod.md`, `infrastructure/containers.local_dev.md`, `infrastructure/containers.prod.md`, `infrastructure/fallbacks.local_dev.md` |
 | Streaming/WebSockets | `streaming/shared.md` |
 | Background jobs | `async/jobs.shared.md`, `async/local_dev.md`, `async/prod.md` |

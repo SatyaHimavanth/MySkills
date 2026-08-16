@@ -4,6 +4,7 @@ A requirement is complete only when its policy files exist, are routed from `SKI
 
 | Requirement | Primary file(s) | Shared | Local | Prod | Discovery | Fallback | Status |
 |---|---|---:|---:|---:|---:|---:|---|
+| Scale tier gating (small-team vs regional/global) | architecture/scale_tiers.shared.md | ✓ | — | ✓ | — | — | COMPLETE |
 | PostgreSQL default | database/shared.md, database/local_dev.md, database/prod.md | ✓ | ✓ | ✓ | ✓ | ✓ | COMPLETE |
 | SQLite explicit-only + limitations | database/sqlite.local_dev.md | ✓ | ✓ | — | — | ✓ | COMPLETE |
 | uv dependency management | python/uv.shared.md, python/uv.local_dev.md, python/uv.prod.md | ✓ | ✓ | ✓ | ✓ | — | COMPLETE |
@@ -26,14 +27,14 @@ A requirement is complete only when its policy files exist, are routed from `SKI
 | SSRF | security/ssrf.shared.md | ✓ | — | — | ✓ | — | COMPLETE |
 | Secrets | security/secrets.shared.md | ✓ | via config | ✓ | — | — | COMPLETE |
 | Proxy/network trust | networking/routing.shared.md, networking/local_dev.md, networking/prod.md, security/http_security.*.md | ✓ | ✓ | ✓ | ✓ | — | COMPLETE |
-| Middleware | middleware.shared.md, middleware.local_dev.md, middleware.prod.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
+| Middleware | middleware/shared.md, middleware/local_dev.md, middleware/prod.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
 | Lifespan/resources | reliability/lifespan.shared.md, reliability/lifespan.local_dev.md, reliability/lifespan.prod.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
 | SQLAlchemy sessions | database/shared.md, database/sessions.shared.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
 | ACID/transactions/isolation | database/acid.shared.md, database/transactions.shared.md | ✓ | — | ✓ | — | — | COMPLETE |
 | Concurrency/locking | database/concurrency.shared.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
 | Connection pooling | database/pooling.shared.md | ✓ | ✓ | ✓ | ✓ | — | COMPLETE |
 | Migrations | database/migrations.shared.md, database/migrations.local_dev.md, database/migrations.prod.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
-| Query performance | database/query_performance.shared.md, database/performance.local_dev.md, database/performance.prod.md | ✓ | ✓ | ✓ | ✓ | — | COMPLETE |
+| Query performance | database/query_performance.shared.md, database/query_performance.local_dev.md, database/query_performance.prod.md | ✓ | ✓ | ✓ | ✓ | — | COMPLETE |
 | PostgreSQL features | database/postgresql.shared.md | ✓ | — | — | — | — | COMPLETE |
 | Time/date | time/shared.md, time/local_dev.md, time/prod.md | ✓ | ✓ | ✓ | — | — | COMPLETE |
 | Outbound HTTP | http/clients.shared.md, http/clients.local_dev.md, http/clients.prod.md | ✓ | ✓ | ✓ | ✓ | — | COMPLETE |

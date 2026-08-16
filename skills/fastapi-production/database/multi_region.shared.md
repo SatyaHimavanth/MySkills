@@ -4,6 +4,8 @@
 
 Define data consistency, clock skew management, replication lag mitigation, and network latency strategies for backends and PostgreSQL databases deployed across multiple geographical regions.
 
+**Apply this file only after the Tier 2 escalation gate in `architecture/scale_tiers.shared.md` is met.** A single-region deployment serving 100–1,000 users (Tier 1) does not need read replicas, cross-region clock-skew handling, or read-after-write routing — a single PostgreSQL primary is correct and simpler. Introducing this file's patterns before there is a real second region adds distributed-systems complexity with no corresponding benefit.
+
 ## Multi-Region Challenges
 
 When database primary nodes, read replicas, API application servers, and frontends (CDN edge) are located in different physical regions (e.g. EU-West, US-East, APAC):

@@ -28,3 +28,4 @@ Only require Redis when the selected local architecture needs it. Before using a
 
 - claiming memory counters prove distributed production behavior
 - silently changing limiter keys or algorithms between local and production
+- importing the limiter instance directly into route code instead of behind the `get_auth_rate_limiter`-style provider described in `security/ratelimiting.shared.md` — local dev is exactly where this class of test runs most often, so the DI seam matters here too, not just in CI against Redis

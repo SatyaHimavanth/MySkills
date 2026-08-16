@@ -4,6 +4,8 @@
 
 Keep application behavior compatible with multi-worker, multi-replica, and multi-region production deployment topologies without forcing local development environments to reproduce full production scale.
 
+**Scope note:** the multi-region layer of this document is Tier 2 material. Most projects should launch at Tier 1 — small-team production (single region, a handful of replicas) — and only adopt the multi-region pattern below when `architecture/scale_tiers.shared.md`'s escalation gate is actually met. Read the single-process → multiple-workers → multiple-replicas progression as the default path; read the multi-region row as an optional, separately-justified step.
+
 ## Production-Shaped Principle
 
 Local development should be production-shaped, not production-sized.

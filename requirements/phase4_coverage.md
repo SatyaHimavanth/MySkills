@@ -11,4 +11,4 @@
 | OWASP API4 resource consumption | api/resource_limits.shared.md, security/ratelimiting.shared.md | ✓ | ✓ | ✓ | bounds/fanout/timeout sections | COMPLETE |
 | OWASP API8 security configuration | security/http_security.shared.md, security/secrets.shared.md | ✓ | ✓ | ✓ | configuration references | COMPLETE |
 | OWASP API9 inventory/versioning | api/versioning.shared.md, api/endpoints.shared.md | ✓ | — | — | inventory/deprecation sections | COMPLETE |
-| OWASP API10 unsafe API consumption | http_client/shared.md, security/ssrf.shared.md | ✓ | via client policy | via client policy | response/transport validation | COMPLETE |
+| OWASP API10 unsafe API consumption | http/clients.shared.md, security/ssrf.shared.md | ✓ | via client policy | via client policy | response/transport validation | COMPLETE |

@@ -3,6 +3,8 @@
 ## Purpose
 Prevent tenant B from reading or writing tenant A's data. Same vulnerability class as `security/object_authorization.shared.md` (BOLA), one level up.
 
+**Scope note:** Tier 1 — small-team production (`architecture/scale_tiers.shared.md`) defaults to **single-tenant**: one internal org, one deployment, no cross-org data boundary to enforce. Do not add tenant-scoping columns, RLS policies, or tenant-context middleware to a single-tenant deployment "for future-proofing" — that's the same speculative-infrastructure anti-pattern `architecture/complexity.shared.md` warns against, just at the data-model layer, and it's a much more expensive layer to unwind than a config value. Apply this file only when the project actually serves more than one tenant (organization) from a single deployment.
+
 ## Isolation models
 - **Shared tables + `tenant_id` column** (default): simplest ops, cheapest, requires discipline on every query.
 - **Schema-per-tenant**: stronger DB-level isolation, migration fan-out cost (N schemas to migrate).

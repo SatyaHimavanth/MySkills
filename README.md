@@ -6,7 +6,7 @@ A modular collection of production-grade skills and architecture guardrails for 
 
 | Skill Name | Path | Description |
 |:---|:---|:---|
-| `fastapi-production` | `skills/fastapi-production` | Architecture guardrails for building production-grade FastAPI backends with PostgreSQL, Pydantic v2, SQLAlchemy 2.0, Argon2id, and multi-region deployment. |
+| `fastapi-production` | `skills/fastapi-production` | Architecture guardrails for building production-grade FastAPI backends with PostgreSQL, Pydantic v2, SQLAlchemy 2.0, and Argon2id. Defaults to a small-team production target (single region, ~100–1,000 users) with an explicit, gated path to regional/global scale — see `architecture/scale_tiers.shared.md`. Cloud provisioning (AWS/GCP/etc.) is intentionally out of scope; pair with your cloud provider's skill for that layer. |
 | `frontend-api-client` | `skills/frontend-api-client` | Generates a typed TypeScript client + Zod runtime validators from a backend's OpenAPI schema (verified against FastAPI) instead of hand-written request/response types, so backend contract drift becomes a build error. |
 | *(Future Skills)* | `skills/<skill-name>` | Design System or AI Agent skills will be added here. |
 
@@ -45,6 +45,10 @@ To install a skill manually into your local AI workspace:
 
 ---
 
+## Maintainer tooling
+
+The top-level `requirements/` directory holds this repository's own coverage matrices and audit scripts, used to verify that each skill's files stay internally consistent as they change. It is not part of any individual skill and is not installed by `npx skills add <repo> <skill-name>`; it only matters if you're contributing to this repository.
+
 ## Repository Structure
 
 ```text
@@ -55,7 +59,7 @@ To install a skill manually into your local AI workspace:
     ├── fastapi-production/             # FastAPI Backend Skill
     │   ├── SKILL.md                    # Main skill entrypoint (YAML frontmatter + rules)
     │   ├── api/                        # API route & schema policies
-    │   ├── architecture/               # Layered architecture rules
+    │   ├── architecture/               # Layered architecture rules + scale_tiers.shared.md (Tier 1 small-team vs Tier 2 regional/global)
     │   ├── async/                      # Job queues & async handling
     │   ├── cache/                      # Redis caching policies
     │   ├── configuration/              # Pydantic Settings v2

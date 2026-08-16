@@ -11,6 +11,9 @@ type ErrorResponse = {
 };
 ```
 
+Read those generated types as a lower bound, not a complete list: a status code the backend returns via a global exception handler without declaring it in the route's `responses=` won't appear in `/openapi.json` at all, so it can't appear in the generated type either — see `codegen/shared.md`'s Forbidden section for the verified before/after. If you hit a runtime error status the generated union doesn't mention, that's a backend schema gap, not a reason to hand-write a wider type here.
+
+
 ## Verified live
 The backend's real error responses were exercised directly during verification — a 401 on bad credentials, a 404 from the router's own catch-all, correctly surfaced through axios's `error.response.data` shape shown above with no transformation needed; the generated types already matched the live payload exactly.
 

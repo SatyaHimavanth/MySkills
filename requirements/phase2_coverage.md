@@ -6,10 +6,10 @@
 | Concurrency control | `database/concurrency.shared.md` | COMPLETE |
 | Optimistic/pessimistic locking | `database/concurrency.shared.md`, `database/acid.shared.md` | COMPLETE |
 | Query performance / N+1 | `database/query_performance.shared.md` | COMPLETE |
-| EXPLAIN/query-plan workflow | `database/query_performance.shared.md`, `database/performance.local_dev.md`, `database/performance.prod.md` | COMPLETE |
+| EXPLAIN/query-plan workflow | `database/query_performance.shared.md`, `database/query_performance.local_dev.md`, `database/query_performance.prod.md` | COMPLETE |
 | Index design | `database/query_performance.shared.md`, `database/postgresql.shared.md` | COMPLETE |
 | PostgreSQL-specific types/features | `database/postgresql.shared.md` | COMPLETE |
-| Local/prod performance behavior | `database/performance.local_dev.md`, `database/performance.prod.md` | COMPLETE |
+| Local/prod performance behavior | `database/query_performance.local_dev.md`, `database/query_performance.prod.md` | COMPLETE |
 
 ## Verification requirements
 

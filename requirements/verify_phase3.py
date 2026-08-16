@@ -9,7 +9,7 @@ FILES = [
     "reliability/lifespan.shared.md",
     "reliability/lifespan.local_dev.md",
     "reliability/lifespan.prod.md",
-    "http_client/shared.md",
+    "http/clients.shared.md",
     "streaming/shared.md",
     "requirements/phase3_coverage.md",
 ]
@@ -17,7 +17,7 @@ REQUIRED = {
     "async/idempotency.shared.md": ["Idempotency-Key", "409", "transaction", "concurrent"],
     "async/jobs.shared.md": ["BackgroundTasks", "outbox", "retry", "idempotent", "delivery"],
     "reliability/lifespan.shared.md": ["lifespan", "shutdown", "request-scoped", "testing"],
-    "http_client/shared.md": ["httpx", "timeout", "retry", "idempotency", "response validation"],
+    "http/clients.shared.md": ["httpx", "timeout", "retry", "idempotency", "response validation"],
     "streaming/shared.md": ["StreamingResponse", "SSE", "WebSocket", "disconnect", "backpressure"],
 }
 

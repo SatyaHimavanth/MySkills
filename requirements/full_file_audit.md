@@ -7,9 +7,10 @@ This audit was generated after reading every file in the release tree. It record
 
 ## File manifest
 
+Note: `.dev/environment.local.md` is intentionally **not** listed below. It is a runtime artifact the coding agent creates inside the *consumer's* project (see `checklists/project-environment-discovery.md`), not a file shipped in this repository. An earlier snapshot of this audit incorrectly listed it as a tracked release file; that row has been removed.
+
 | File | Bytes | Lines | First heading | Structural status |
 |---|---:|---:|---|---|
-| `.dev/environment.local.md` | 417 | 19 | Local Environment Discovery | PASS |
 | `.gitignore` | 45 | 0 |  | PASS |
 | `SKILL.md` | 8718 | 164 | FastAPI Production Skill | PASS |
 | `api/endpoints.local_dev.md` | 768 | 26 | Endpoint Management — Local Development | PASS |
@@ -26,6 +27,7 @@ This audit was generated after reading every file in the release tree. It record
 | `api/versioning.shared.md` | 1861 | 85 | API Versioning and Inventory — Shared | PASS |
 | `architecture/local_dev.md` | 747 | 21 | Architecture: Local Development | PASS |
 | `architecture/prod.md` | 708 | 20 | Architecture: Production | PASS |
+| `architecture/scale_tiers.shared.md` | 6738 | 61 | Scale Tiers — Shared | PASS |
 | `architecture/shared.md` | 708 | 20 | Architecture | PASS |
 | `async/idempotency.shared.md` | 3151 | 111 | Idempotency — Shared | PASS |
 | `async/jobs.shared.md` | 3073 | 114 | Background Jobs — Shared | PASS |
@@ -45,8 +47,8 @@ This audit was generated after reading every file in the release tree. It record
 | `database/migrations.local_dev.md` | 642 | 20 | Database Migrations — Local Development | PASS |
 | `database/migrations.prod.md` | 610 | 13 | Database Migrations — Production | PASS |
 | `database/migrations.shared.md` | 1720 | 54 | Database Migrations — Shared | PASS |
-| `database/performance.local_dev.md` | 1384 | 39 | Database Performance — Local Development | PASS |
-| `database/performance.prod.md` | 1928 | 49 | Database Performance — Production | PASS |
+| `database/query_performance.local_dev.md` | 1384 | 39 | Database Performance — Local Development | PASS |
+| `database/query_performance.prod.md` | 1928 | 49 | Database Performance — Production | PASS |
 | `database/pooling.shared.md` | 2243 | 92 | Database Connection Pooling — Shared | PASS |
 | `database/postgresql.shared.md` | 1941 | 54 | PostgreSQL-Specific Design | PASS |
 | `database/prod.md` | 1206 | 36 | Database: Production | PASS |
@@ -66,14 +68,13 @@ This audit was generated after reading every file in the release tree. It record
 | `errors/shared.md` | 821 | 24 | Error Handling | PASS |
 | `http/clients.local_dev.md` | 895 | 28 | Outbound HTTP — Local Development | PASS |
 | `http/clients.prod.md` | 781 | 24 | Outbound HTTP — Production | PASS |
-| `http/clients.shared.md` | 1173 | 37 | Outbound HTTP Clients | PASS |
-| `http_client/shared.md` | 3281 | 89 | Outbound HTTP Clients — Shared | PASS |
+| `http/clients.shared.md` | 3281 | 89 | Outbound HTTP Clients — Shared | PASS |
 | `infrastructure/containers.local_dev.md` | 892 | 31 | Containers: Local Development | PASS |
 | `infrastructure/fallbacks.local_dev.md` | 1023 | 34 | Local Fallbacks | PASS |
 | `memory.md` | 18664 | 327 | FastAPI Production Skill Memory | PASS |
-| `middleware.local_dev.md` | 755 | 23 | Middleware — Local Development | PASS |
-| `middleware.prod.md` | 805 | 25 | Middleware — Production | PASS |
-| `middleware.shared.md` | 1212 | 54 | Middleware — Shared | PASS |
+| `middleware/local_dev.md` | 755 | 23 | Middleware — Local Development | PASS |
+| `middleware/prod.md` | 805 | 25 | Middleware — Production | PASS |
+| `middleware/shared.md` | 1212 | 54 | Middleware — Shared | PASS |
 | `networking/local_dev.md` | 633 | 26 | Networking — Local Development | PASS |
 | `networking/prod.md` | 669 | 19 | Networking — Production | PASS |
 | `networking/routing.shared.md` | 885 | 30 | Networking and Proxy Routing — Shared | PASS |

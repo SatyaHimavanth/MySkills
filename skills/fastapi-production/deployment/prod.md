@@ -4,6 +4,8 @@
 
 Define the production runtime configuration, ASGI server setup, and process management for deploying FastAPI applications.
 
+**Default scope:** the guidance below targets Tier 1 — small-team production (single region, a handful of replicas, ~100–1,000 users) per `architecture/scale_tiers.shared.md`. It applies just as well underneath Tier 2, but nothing here requires multiple regions, a CDN, or anycast DNS — those are separate, gated decisions, not part of the default production baseline.
+
 ## Rules
 
 - Assume a reverse proxy / load balancer (Nginx, Caddy, ALB) sits in front of FastAPI.

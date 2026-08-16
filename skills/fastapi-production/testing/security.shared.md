@@ -62,6 +62,8 @@ Test:
 - backend failure policy
 - multiple workers when distributed behavior matters
 
+These require the limiter to be swappable per test — see `security/ratelimiting.shared.md`'s "Wire the limiter through FastAPI's DI" section for the provider pattern this depends on, and its verified gotcha about dependency overrides that construct a fresh instance per call (which silently defeats the test entirely: the limit never trips because state never accumulates).
+
 ## CSRF tests
 
 For cookie-authenticated browser flows test:
