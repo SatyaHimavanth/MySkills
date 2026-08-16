@@ -99,19 +99,7 @@ degraded/fallback response
 
 ## Circuit breakers
 
-Use a circuit breaker only when repeated dependency failures can create cascading load.
-
-A typical model:
-
-```text
-closed
-  ↓ repeated failures
-open
-  ↓ cool-down
-half-open
-  ↓ success → closed
-  ↓ failure → open
-```
+Use a circuit breaker only when repeated dependency failures can create cascading load. See `reliability/circuit_breakers.shared.md` for the full state machine, configuration knobs, metrics, and testing checklist — this section covers only where it fits in the degradation sequence below.
 
 A breaker should have explicit:
 
@@ -155,13 +143,10 @@ Examples:
 ```text
 Redis unavailable
     → DB/source of truth
-
 Recommendation API unavailable
     → core result without recommendations
-
 Telemetry unavailable
     → continue serving requests
-
 Queue unavailable
     → reject/mark pending based on job durability policy
 ```

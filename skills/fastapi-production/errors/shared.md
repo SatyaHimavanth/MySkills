@@ -16,6 +16,8 @@ Translate domain and infrastructure failures into a unified, stable HTTP error c
 
 ## Standardized Error Response Model
 
+See `api/response_contracts.shared.md`'s reconciliation note on bare vs. enveloped success responses — whichever convention a project picks, errors use this four-field envelope either way:
+
 ```python
 from pydantic import BaseModel
 from fastapi import FastAPI, Request, status
@@ -28,7 +30,10 @@ class ErrorDetail(BaseModel):
     details: list[dict] | None = None
 
 class ErrorResponse(BaseModel):
+    success: bool = False
+    data: None = None
     error: ErrorDetail
+    meta: dict | None = None
 
 class AppError(Exception):
     def __init__(self, code: str, message: str, status_code: int = 400, details: list[dict] | None = None):
@@ -58,7 +63,12 @@ def setup_exception_handlers(app: FastAPI) -> None:
     async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code,
-            content={"error": {"code": exc.code, "message": exc.message, "details": exc.details}},
+            content={
+                "success": False,
+                "data": None,
+                "error": {"code": exc.code, "message": exc.message, "details": exc.details},
+                "meta": None,
+            },
         )
 
     @app.exception_handler(RequestValidationError)
@@ -66,11 +76,14 @@ def setup_exception_handlers(app: FastAPI) -> None:
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={
+                "success": False,
+                "data": None,
                 "error": {
                     "code": "VALIDATION_ERROR",
                     "message": "Invalid request payload",
                     "details": exc.errors(),
-                }
+                },
+                "meta": None,
             },
         )
 ```

@@ -14,7 +14,7 @@ Route traffic only to healthy application instances while preserving request con
 - Do not rely on sticky sessions to compensate for local-memory state.
 
 ## Topology
-
+See `deployment/topology.shared.md` for the full multi-region version of this diagram.
 ```text
 Client
   ↓

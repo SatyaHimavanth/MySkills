@@ -16,13 +16,10 @@ Keep local operations lightweight while allowing failure modes to be exercised w
 ```text
 stop Redis
   → verify cache fallback
-
 stop external mock
   → verify timeout/error mapping
-
 exhaust test queue
   → verify bounded producer behavior
-
 terminate worker
   → verify job retry/recovery semantics
 ```

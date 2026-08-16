@@ -8,7 +8,7 @@ description: Guardrails for TypeScript frontends consuming a typed backend (e.g.
 ## Core principle
 The backend's OpenAPI schema (e.g. FastAPI's auto-generated `/openapi.json`) is the single source of truth for request/response shapes. Never hand-write TypeScript interfaces or fetch calls describing a backend contract that already has a machine-readable schema — generate from it. This mirrors `fastapi-production`'s own "shared invariant, not duplicated logic" principle, applied across the frontend/backend boundary instead of within one codebase.
 
-Every pattern below was run end-to-end against a real FastAPI backend (real PostgreSQL/Redis, no mocks) before being written down. Two real integration bugs were caught doing that — both are called out explicitly in the relevant files, because they're the two most likely mistakes to repeat.
+Every pattern below was run end-to-end against a real FastAPI backend (real PostgreSQL/Redis, no mocks) before being written down. Three real integration bugs were caught doing that — all are called out explicitly in the relevant files, because they're the mistakes most likely to repeat: a `baseUrl` double-prefix (`codegen/shared.md`), a mutator signature mismatch that silently turned every write into a GET (`codegen/shared.md`, `auth/shared.md`), and a terminal refresh failure that left dead tokens in memory with no app-level signal (`auth/shared.md`).
 
 ## Required agent workflow
 

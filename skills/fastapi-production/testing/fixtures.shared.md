@@ -11,21 +11,13 @@ Every fixture owns the setup and cleanup of the resource it creates.
 Examples:
 
 ```text
-
 settings fixture
-
 DB engine fixture
-
 DB session fixture
-
 Redis fixture
-
 HTTP client fixture
-
 authenticated-user fixture
-
 test-data factory
-
 ```
 
 ## Scope selection
@@ -33,13 +25,9 @@ test-data factory
 Use the narrowest scope that avoids unnecessary setup cost.
 
 ```text
-
 function → mutable test data
-
 module   → expensive isolated resource when safe
-
 session  → immutable/shared infrastructure only
-
 ```
 
 ## Database fixture
@@ -51,17 +39,11 @@ The fixture should provide an isolated transaction/session and guarantee cleanup
 Prefer factories:
 
 ```python
-
 @pytest.fixture
-
 def user_factory(db_session):
-
     def create_user(**overrides):
-
         ...
-
     return create_user
-
 ```
 
 Do not create one permanent global user used by every test.

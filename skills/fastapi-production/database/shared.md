@@ -56,7 +56,7 @@ Read these detailed policies before implementation:
 - `database/concurrency.shared.md`
 - `database/pooling.shared.md`
 - `database/migrations.shared.md`
-- `database/query_performance.shared.md`
+- `database/query_performance.shared.md` (plus `.local_dev.md`/`.prod.md`)
 - `database/postgresql.shared.md`
 
 ## Environment rule

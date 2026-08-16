@@ -83,10 +83,10 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Versioning/inventory | `api/versioning.shared.md` |
 | OpenAPI/docs | `api/openapi.shared.md`, `api/openapi.local_dev.md`, `api/openapi.prod.md` |
 | Errors | `errors/shared.md`, `errors/local_dev.md`, `errors/prod.md` |
-| PostgreSQL/SQLAlchemy | `database/shared.md`, `database/local_dev.md`, `database/prod.md`, `database/sessions.shared.md`, `database/acid.shared.md`, `database/transactions.shared.md`, `database/concurrency.shared.md`, `database/query_performance.shared.md`, `database/postgresql.shared.md`, `database/multi_region.shared.md` |
+| PostgreSQL/SQLAlchemy | `database/shared.md`, `database/local_dev.md`, `database/prod.md`, `database/sessions.shared.md`, `database/acid.shared.md`, `database/transactions.shared.md`, `database/concurrency.shared.md`, `database/query_performance.shared.md`, `database/query_performance.local_dev.md`, `database/query_performance.prod.md`, `database/postgresql.shared.md`, `database/multi_region.shared.md` |
 | Multi-tenancy | `database/multi_tenancy.shared.md` |
 | Migrations | `database/migrations.shared.md`, `database/migrations.local_dev.md`, `database/migrations.prod.md` |
-| Pooling/performance | `database/pooling.shared.md`, `database/performance.local_dev.md`, `database/performance.prod.md` |
+| Connection pooling | `database/pooling.shared.md` |
 | SQLite | `database/sqlite.local_dev.md` |
 | Authentication | `security/authentication.shared.md`, `security/authentication.local_dev.md`, `security/authentication.prod.md` |
 | Authorization | `security/authorization.shared.md`, `security/object_authorization.shared.md` |

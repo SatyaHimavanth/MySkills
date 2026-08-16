@@ -48,7 +48,8 @@ Covered by:
 ```text
 api/resource_limits.shared.md
 security/ratelimiting.shared.md
-storage/shared.md
+storage/files.shared.md
+storage/downloads.shared.md
 ```
 
 Controls include:

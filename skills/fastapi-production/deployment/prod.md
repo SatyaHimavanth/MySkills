@@ -60,7 +60,7 @@ async def readiness(db: AsyncSession = Depends(get_db_session)):
 ```
 
 ## Topology
-
+See `deployment/topology.shared.md` for the full multi-region version of this diagram.
 ```text
 Client
   ↓

@@ -12,6 +12,7 @@ Define lightweight, secure, reproducible, multi-stage Docker container image bui
 - Do not include build tooling, compilers, git, or source cache in the final runtime container.
 - Use `uv sync --frozen --no-dev --no-editable` for reproducible locked builds.
 - Execute application processes directly (`exec`) to handle SIGTERM/SIGINT signals properly.
+- Maintain a `.dockerignore` excluding `.env`, `.git`, `tests/`, `__pycache__`, and `.venv` — required even with selective `COPY`, since it's the backstop against secrets/dev files reaching the build context at all.
 
 ## Production Multi-Stage Dockerfile (`uv` + FastAPI)
 
@@ -36,9 +37,12 @@ RUN groupadd -r appgroup && useradd -r -g appgroup -u 10001 appuser
 
 WORKDIR /app
 
-# Copy virtualenv and application code from builder
+# Copy virtualenv and application code from builder — copy explicitly, not `COPY . /app`,
+# which would also pull in .env, .git, tests/, and anything else not excluded by .dockerignore.
 COPY --from=builder /app/.venv /app/.venv
-COPY . /app
+COPY app /app/app
+COPY alembic /app/alembic
+COPY alembic.ini /app/alembic.ini
 
 # Set PATH to use virtualenv
 ENV PATH="/app/.venv/bin:$PATH" \
@@ -64,3 +68,4 @@ CMD ["uvicorn", "myapp.main:app", "--host", "0.0.0.0", "--port", "8000", "--work
 - running containers as `root` in production
 - installing dev dependencies (`pytest`, `mypy`) in production container images
 - shell form `CMD uvicorn myapp.main:app` (blocks SIGTERM signal propagation)
+- `COPY . /app` with no `.dockerignore` — risks shipping `.env`, `.git`, or test fixtures into the image

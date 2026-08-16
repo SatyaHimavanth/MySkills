@@ -9,15 +9,10 @@ Define safe, authorized, efficient download behavior for local files and object 
 Use the simplest safe response mechanism:
 
 ```text
-
 small generated response → normal Response
-
 local file → FileResponse
-
 large generated stream → StreamingResponse
-
 object storage → signed URL when practical
-
 ```
 
 Do not load large files entirely into RAM just to return them.
@@ -31,11 +26,8 @@ Perform authorization before fetching or exposing a private object.
 Set appropriate:
 
 - `Content-Type`
-
 - `Content-Disposition`
-
 - caching headers when explicitly safe
-
 - `ETag`/conditional headers when the contract supports them
 
 Do not place untrusted filenames directly into `Content-Disposition` without safe encoding.

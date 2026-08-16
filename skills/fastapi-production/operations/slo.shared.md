@@ -63,10 +63,8 @@ Define a policy such as:
 ```text
 budget healthy
     → normal releases
-
 budget materially consumed
     → additional reliability review
-
 budget exhausted
     → restrict risky changes until recovery
 ```
