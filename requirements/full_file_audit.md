@@ -2,9 +2,8 @@
 
 This audit was generated after reading every file in the release tree. It records basic structural evidence for each file and the release-wide checks applied to the complete tree.
 
-- Total files: 153
-- Markdown files: 141
-- Empty files: 0
+- The table below is a historical audit snapshot and is not the authoritative current file count. Current counts should be derived from the filesystem and release verification scripts so the audit does not silently become stale after additions/renames.
+- Empty files in the audited snapshot: 0
 
 ## File manifest
 

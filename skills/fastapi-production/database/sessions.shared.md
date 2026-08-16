@@ -94,12 +94,12 @@ With async APIs, setting `expire_on_commit=False` in `async_sessionmaker` preven
 
 **This does not cover server-generated columns on UPDATE.** `expire_on_commit=False` only stops the *whole object* from being expired; it does not stop SQLAlchemy from marking a specific attribute as "needs refresh" when that attribute has a `server_default` or `onupdate` value the ORM never received back from the database. If a mapped column uses `server_default=func.now()` or `onupdate=func.now()`, accessing that attribute after an INSERT/UPDATE will still trigger an implicit lazy load — which raises `MissingGreenlet` under the async driver, `expire_on_commit` setting notwithstanding.
 
-Set `eager_defaults=True` on any mapped class that has `server_default`/`onupdate` columns you read back in the same request (e.g. returning the updated row in an API response). This makes SQLAlchemy use `RETURNING` to populate those columns immediately as part of the INSERT/UPDATE, instead of deferring and later lazy-loading them:
+When an API must immediately serialize server-generated values, ensure those values are populated before serialization. In SQLAlchemy 2.x, `eager_defaults="auto"` can use `RETURNING` automatically for INSERTs on supported backends; UPDATE behavior is more nuanced and may require explicit `eager_defaults=True` when server-generated values must be fetched immediately. Do not state that `eager_defaults=True` is universally required for every `server_default`/`onupdate` column:
 
 ```python
 class Task(Base):
     __tablename__ = "tasks"
-    __mapper_args__ = {"eager_defaults": True}  # required: this table has onupdate=func.now()
+    __mapper_args__ = {"eager_defaults": True}  # useful when UPDATE-time server-generated values must be available immediately
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
     updated_at: Mapped[datetime] = mapped_column(
@@ -114,7 +114,7 @@ Use isolated sessions/transactions or dedicated test databases (e.g. test contai
 
 ## Forbidden
 
-- `server_default`/`onupdate` columns read back in the same request without `eager_defaults=True` on that mapped class
+- server-generated `server_default`/`onupdate` values are serialized before SQLAlchemy has populated them; choose explicit eager/default-refresh behavior based on the INSERT/UPDATE path and backend capabilities
 - assuming `expire_on_commit=False` alone is sufficient to prevent `MissingGreenlet` on every column
 
 ## Source basis

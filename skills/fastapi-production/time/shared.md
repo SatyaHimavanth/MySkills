@@ -7,7 +7,7 @@ Prevent timezone, DST, expiration, multi-region clock drift, and timestamp incon
 ## Rules
 
 - Use timezone-aware UTC datetimes for all instant timestamps (`datetime.now(timezone.utc)`).
-- Do not use naive `datetime.utcnow()` or `datetime.now()` for persisted application timestamps (deprecated in Python 3.12+).
+- Do not use naive `datetime.utcnow()` for persisted application timestamps; prefer timezone-aware UTC values such as `datetime.now(timezone.utc)`. A bare `datetime.now()` is not itself deprecated, but it returns a naive local-time value and is unsafe for persisted instants unless the application explicitly requires that representation.
 - Use `zoneinfo.ZoneInfo` for IANA timezone logic (e.g. `America/New_York`).
 - Rely on the Database Primary Server Time (`server_default=func.now()`) for entity audit columns (`created_at`, `updated_at`) to eliminate application server clock skew across regions.
 - When validating time-bounded security tokens (JWT `exp`, `nbf`, `iat`) in distributed multi-region systems, specify a clock skew leeway (e.g. `jwt.decode(..., leeway=10)`).

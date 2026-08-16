@@ -7,8 +7,8 @@ FILES = [
     "database/concurrency.shared.md",
     "database/query_performance.shared.md",
     "database/postgresql.shared.md",
-    "database/performance.local_dev.md",
-    "database/performance.prod.md",
+    "database/query_performance.local_dev.md",
+    "database/query_performance.prod.md",
     "requirements/phase2_coverage.md",
 ]
 

@@ -21,17 +21,26 @@ This skill is an implementation and architecture guardrail for coding assistants
 10. Preserve stable API, DB, security, and operational contracts unless a deliberate change is reviewed and tested.
 11. Prefer shared invariants plus local/prod implementation differences rather than duplicating business logic.
 12. Treat security, concurrency, failure behavior, and observability as implementation requirements, not post-hoc hardening.
+13. Start with the smallest architecture that satisfies the settled requirements; do not add infrastructure speculatively.
+14. Preserve production-relevant semantics locally even when production infrastructure is larger or shared.
+15. Add a production seam only where a real future replacement is plausible; do not abstract everything preemptively.
+16. Any escalation from a simple local design to Redis, queues, object storage, service decomposition, or distributed topology must have a concrete requirement.
+17. A local build is successful when production promotion mostly changes configuration, infrastructure wiring, scaling, and operational settings—not business logic or API contracts.
 
 ## Required agent workflow
 
 ```text
-SCOPE THE PROJECT (if greenfield or ambiguous — see checklists/project-scoping.md)
+SCOPE THE PROJECT (if greenfield or materially ambiguous — see checklists/project-scoping.md)
+  ↓
+ESTABLISH COMPLEXITY BUDGET / BASELINE ARCHITECTURE
   ↓
 DISCOVER ENVIRONMENT
   ↓
 INSPECT EXISTING PROJECT
   ↓
 IDENTIFY CAPABILITY / REQUIREMENT
+  ↓
+CHOOSE ONLY THE INFRASTRUCTURE REQUIRED BY THE SETTLED REQUIREMENTS
   ↓
 READ relevant *.shared.md
   ↓
@@ -73,7 +82,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 
 | Capability | Read first |
 |---|---|
-| Project architecture | `architecture/shared.md`, `architecture/local_dev.md`, `architecture/prod.md` |
+| Project architecture | `architecture/shared.md`, `architecture/complexity.shared.md`, `architecture/local_dev.md`, `architecture/prod.md` |
 | Python/uv/dependencies | `python/uv.shared.md`, `python/uv.local_dev.md`, `python/uv.prod.md` |
 | Configuration/settings | `configuration/shared.md` |
 | Endpoints/routes | `api/endpoints.shared.md`, `api/endpoints.local_dev.md`, `api/endpoints.prod.md` |
@@ -118,9 +127,13 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Feature flags | `deployment/feature_flags.shared.md` |
 | Checklists | `checklists/project-scoping.md`, `checklists/new-endpoint.md`, `checklists/production-readiness.md`, `checklists/architecture-change.md`, `checklists/project-environment-discovery.md` |
 
-## Environment rule
+## Environment and promotion rule
 
 Do not create separate business logic for local and production merely because infrastructure differs. Prefer the same application contracts/interfaces with environment-specific infrastructure wiring.
+
+The default local architecture is the **smallest sufficient production-shaped architecture**. Production may add replicas, shared infrastructure, managed services, stronger observability, queues, object storage, or other operational components only when the requirements justify them.
+
+Use `architecture/complexity.shared.md` whenever deciding whether a component is required now or should remain a future extension point.
 
 ## Compatibility fallback rule
 

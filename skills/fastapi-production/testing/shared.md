@@ -157,7 +157,7 @@ with TestClient(app) as client:
     response = client.get("/health")
 ```
 
-FastAPI documents that the `with` block triggers lifespan startup and shutdown. [Certain]
+Using `TestClient` as a context manager triggers the application's lifespan startup and shutdown through Starlette's test client integration. [Certain]
 
 ## Async API tests
 
@@ -177,7 +177,7 @@ async def test_endpoint():
 
 FastAPI currently documents this exact `pytest.mark.anyio` + HTTPX `AsyncClient`/`ASGITransport` approach. [Certain]
 
-Important: HTTPX `ASGITransport` does not trigger ASGI lifespan automatically. FastAPI documents using an ASGI lifespan manager when lifespan startup/shutdown must run in async tests. [Certain]
+Important: HTTPX `ASGITransport` does not trigger ASGI lifespan automatically. For async tests that depend on lifespan startup/shutdown, use an ASGI lifespan manager around the app rather than assuming `ASGITransport` handles it. [Certain]
 
 ## Test isolation
 

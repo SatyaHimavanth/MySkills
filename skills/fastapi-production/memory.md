@@ -67,6 +67,17 @@ This file records durable architecture decisions for the skill. It is not a subs
 - Assume multiple workers/replicas when designing correctness.
 - Prefer DB atomicity, locking, or optimistic concurrency over process-local synchronization.
 
+## Architecture simplicity / promotion decisions
+
+- Start from the smallest architecture that satisfies settled requirements.
+- Production-shaped means preserving contracts, invariants, authorization, transaction semantics, resource ownership, failure behavior, and operational boundaries—not mirroring production infrastructure locally.
+- Prefer a modular monolith for greenfield work unless independent deployment, scaling, ownership, or failure isolation is an explicit requirement.
+- Add Redis, queues, object storage, service decomposition, multi-region infrastructure, or distributed coordination only when a concrete requirement needs their semantics.
+- Preserve realistic replacement seams at infrastructure boundaries; do not introduce abstraction layers without a plausible future replacement point.
+- Use `FULL` / `PARTIAL` / `MOCK` to state what local substitutes can and cannot prove.
+- Every non-trivial architecture choice should record a short baseline, rationale, future production seam, escalation trigger, and known local PARTIAL behavior.
+- Promotion should primarily change configuration, infrastructure wiring, scaling, and operations—not domain/business logic or public API contracts.
+
 ## Production topology
 
 ```text
@@ -84,6 +95,7 @@ Local infrastructure may be smaller, but application semantics should remain com
 ## Audit state
 
 - The skill has passed the structural routing audit as of 2026-08-11.
+- Greenfield/materially ambiguous work uses an explicit scoping gate and a complexity-budget gate before implementation; small, already-clear changes bypass both to avoid ceremony.
 - 60 unique Markdown references from `SKILL.md` resolve to existing files.
 - No non-exempt policy document is below the minimum substantive-content threshold enforced by `requirements/verify_coverage.py`.
 - `review_audit.md` records the audit findings and remaining scope.

@@ -1,6 +1,6 @@
 # Final Content and Consistency Audit
 
-Date: 2026-08-11
+Date: 2026-08-16
 
 ## Results
 
@@ -41,3 +41,14 @@ python requirements/content_quality_audit.py
 ```
 
 The gate should be supplemented by human review of security-critical architecture before deploying a generated backend.
+
+
+## Architecture-quality upgrade
+
+- Added `architecture/complexity.shared.md` as the explicit complexity-budget and local-to-production promotion gate.
+- Greenfield/materially ambiguous work now resolves scope before implementation and then selects the smallest sufficient architecture.
+- The `grill-me` integration now follows the upstream one-question-at-a-time interview model and avoids duplicating its interrogation mechanism.
+- Clarified that production-shaped means semantic/contract parity, not production-sized local infrastructure.
+- Added escalation triggers for Redis, queues, object storage, service decomposition, and distributed topology to reduce premature infrastructure.
+- Corrected the Phase 2 verifier's stale query-performance paths.
+- Corrected several version-sensitive documentation claims identified during the external fact-check.

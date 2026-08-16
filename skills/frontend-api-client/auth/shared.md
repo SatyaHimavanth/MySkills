@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-// Orval's react-query mode calls custom mutators fetch-style: (url, RequestInit).
+// This skill configures Orval with a fetch-style HTTP client, so its custom mutator uses (url, RequestInit).
 // See codegen/shared.md's Forbidden section for what breaks if this signature is wrong.
 export const apiClient = <T>(url: string, options?: RequestInit): Promise<T> =>
   axiosInstance({
