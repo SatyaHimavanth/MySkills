@@ -1,7 +1,7 @@
 # PII Protection at Rest — Shared
 
 ## Purpose
-Protect PII sitting in application tables — distinct from `security/secrets.shared.md` (credentials) and `security/passwords.shared.md` (auth hashes).
+Protect PII sitting in application tables — distinct from `security/secrets.shared.md` (credentials) and `security/passwords.shared.md` (auth hashes). This file covers field-level classification and the two application-facing encryption techniques (pgcrypto, envelope encryption). For how these fit alongside transit, at-rest, and backup encryption, see `database/encryption.shared.md`.
 
 ## Classify before encrypting
 Not all PII needs the same treatment. Classify fields (name/email vs. SSN/government ID/health data) and apply encryption proportional to sensitivity — encrypting everything makes normal queries (search, join, sort) impossible without justification.
@@ -20,7 +20,7 @@ Encrypted columns can't be indexed for equality/range search directly. Don't enc
 For SSNs, payment data, health records: encrypt in the application before `INSERT`, so the DB only ever stores ciphertext and never sees plaintext, even from a superuser or a compromised replica. Use envelope encryption — a data key per record/tenant, itself encrypted by a root key held in a KMS/secrets manager (see `security/secrets.shared.md`), not one static application-wide key.
 
 ## Right to erasure (GDPR/CCPA)
-A deletion request must cascade correctly through: primary tables (FK cascade or explicit delete), soft-delete flags (a `deleted_at` flag is not erasure), audit event `before_state`/`after_state` snapshots (see `security/audit_logging.shared.md` — redact or key-shred, don't leave plaintext PII in an immutable audit trail forever), and backups (define a backup retention window after which old backups age out; you cannot selectively edit an existing backup).
+A deletion request must cascade correctly through: primary tables (FK cascade or explicit delete), soft-delete flags (a `deleted_at` flag is not erasure), audit event `before_state`/`after_state` snapshots (see `security/audit_logging.shared.md` — redact or key-shred, don't leave plaintext PII in an immutable audit trail forever), and backups (define a backup retention window after which old backups age out; you cannot selectively edit an existing backup — for large user bases where that's impractical per-request, see `database/encryption.shared.md` §5 for per-user key encryption, where erasure destroys the user's key instead of editing every backup that contains their ciphertext).
 
 ## Forbidden
 - one static encryption key for all records/tenants

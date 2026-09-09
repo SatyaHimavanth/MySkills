@@ -98,6 +98,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | OpenAPI/docs | `api/openapi.shared.md`, `api/openapi.local_dev.md`, `api/openapi.prod.md` |
 | Errors | `errors/shared.md`, `errors/local_dev.md`, `errors/prod.md` |
 | PostgreSQL/SQLAlchemy | `database/shared.md`, `database/local_dev.md`, `database/prod.md`, `database/sessions.shared.md`, `database/acid.shared.md`, `database/transactions.shared.md`, `database/concurrency.shared.md`, `database/query_performance.shared.md`, `database/query_performance.local_dev.md`, `database/query_performance.prod.md`, `database/postgresql.shared.md`, `database/multi_region.shared.md` |
+| Database encryption (in transit, at rest, column-level, backups, per-user crypto-shredding, key management) | `database/encryption.shared.md`, `security/pii_protection.shared.md`, `security/secrets.shared.md` |
 | Multi-tenancy | `database/multi_tenancy.shared.md` |
 | Migrations | `database/migrations.shared.md`, `database/migrations.local_dev.md`, `database/migrations.prod.md` |
 | Connection pooling | `database/pooling.shared.md` |
@@ -112,7 +113,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Secrets | `security/secrets.shared.md` |
 | OWASP API Security Top 10 checklist | `security/api_security.shared.md` |
 | Audit logging | `security/audit_logging.shared.md` |
-| PII protection at rest | `security/pii_protection.shared.md` |
+| PII protection at rest | `security/pii_protection.shared.md` (field-level classification and implementation — see `database/encryption.shared.md` for the full set of encryption layers: transit, at-rest, column, backups) |
 | Middleware/request lifecycle | `middleware/shared.md`, `middleware/local_dev.md`, `middleware/prod.md`, `reliability/lifespan.shared.md`, `reliability/lifespan.local_dev.md`, `reliability/lifespan.prod.md` |
 | Outbound HTTP | `http/clients.shared.md`, `http/clients.local_dev.md`, `http/clients.prod.md` |
 | Cache / Redis / Infrastructure | `cache/shared.md`, `cache/local_dev.md`, `cache/prod.md`, `infrastructure/containers.local_dev.md`, `infrastructure/containers.prod.md`, `infrastructure/fallbacks.local_dev.md` |
