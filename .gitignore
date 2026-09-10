@@ -42,3 +42,8 @@ Thumbs.db
 # Antigravity / Agent Scratch
 scratch/
 .system_generated/
+
+# Others
+*.patch
+*.zip
+

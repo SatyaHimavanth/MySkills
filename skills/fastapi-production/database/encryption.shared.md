@@ -19,12 +19,18 @@ Naming the threat first tells you which layer to spend effort on. "We need datab
 Require TLS between the application and PostgreSQL in every environment that leaves a single trusted host:
 
 ```python
-# SQLAlchemy async engine, verify-full (not just require)
-DATABASE_URL = "postgresql+asyncpg://user:pass@host:5432/db?ssl=verify-full"
+# SQLAlchemy + asyncpg: do NOT rely on ?ssl=... or ?sslmode=... in the URL — this is
+# documented as unreliable through SQLAlchemy's asyncpg dialect (see sqlalchemy/sqlalchemy
+# issues #5973 and discussion #10894); it can silently fail to apply, giving false confidence
+# that TLS verification is active when it isn't. Pass it via connect_args instead:
+engine = create_async_engine(
+    "postgresql+asyncpg://user:pass@host:5432/db",
+    connect_args={"ssl": "verify-full"},  # or an ssl.SSLContext for a custom CA bundle
+)
 ```
 
 - `sslmode=require` encrypts the wire but does not verify the server identity — vulnerable to MITM with a forged cert. Use `verify-full` (or the driver's equivalent) in prod, pinned to a known CA bundle.
-- `local_dev.md`/`prod.md` in this folder define the per-environment default; do not silently downgrade to `disable` because a local container makes verify-full inconvenient — use `sslmode=require` locally instead of turning TLS off entirely if the local Postgres already supports it.
+- `local_dev.md`/`prod.md` in this folder define the per-environment default; do not silently downgrade to `"disable"` because a local container makes `"verify-full"` inconvenient — use `connect_args={"ssl": "require"}` locally instead of turning TLS off entirely if the local Postgres already supports it.
 - This is necessary but not sufficient: it protects the network hop, not the data once it lands on disk or once a query result crosses back to the app in plaintext.
 
 ## 2. Encryption at rest (disk/volume)
