@@ -108,6 +108,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Passwords | `security/passwords.shared.md` |
 | Rate limiting | `security/ratelimiting.shared.md`, `security/ratelimiting.local_dev.md`, `security/ratelimiting.prod.md` |
 | SSRF | `security/ssrf.shared.md` |
+| Webhook signature verification | `security/webhooks.shared.md` |
 | CSRF/cookies | `security/csrf.shared.md`, `security/csrf.local_dev.md`, `security/csrf.prod.md` |
 | CORS / security headers / proxy trust | `security/cors.shared.md`, `security/cors.local_dev.md`, `security/cors.prod.md`, `security/security_headers.shared.md`, `security/security_headers.local_dev.md`, `security/security_headers.prod.md`, `security/http_security.shared.md`, `security/http_security.local_dev.md`, `security/http_security.prod.md`, `networking/routing.shared.md`, `networking/local_dev.md`, `networking/prod.md` |
 | Secrets | `security/secrets.shared.md` |
@@ -120,6 +121,7 @@ An installed CLI is not proof that a runtime/service is usable. Never install, r
 | Streaming/WebSockets | `streaming/shared.md` |
 | Background jobs | `async/jobs.shared.md`, `async/local_dev.md`, `async/prod.md` |
 | Transactional outbox / dual-write | `async/outbox.shared.md` |
+| Email/notification delivery | `async/notifications.shared.md` |
 | Idempotency | `async/idempotency.shared.md` |
 | Storage/uploads/downloads | `storage/files.shared.md`, `storage/downloads.shared.md`, `storage/local_dev.md`, `storage/prod.md` |
 | Time/date | `time/shared.md`, `time/local_dev.md`, `time/prod.md` |
